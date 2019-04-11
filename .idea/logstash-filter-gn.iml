@@ -4,7 +4,7 @@
     <shared />
   </component>
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$/../logstash-filter-greynoise" />
     <orderEntry type="jdk" jdkName="rbenv: jruby-9.1.17.0" jdkType="JRUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v2.0.1, rbenv: jruby-9.1.17.0) [gem]" level="application" />

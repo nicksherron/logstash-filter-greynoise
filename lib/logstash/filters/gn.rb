@@ -9,7 +9,7 @@ require 'faraday'
 # message field with whatever you specify in the configuration.
 #
 # It is only intended to be used as an .
-class LogStash::Filters::Gn < LogStash::Filters::Base
+class LogStash::Filters::Greynoise < LogStash::Filters::Base
 
   # Setting the config_name here is required. This is how you
   # configure this filter from your Logstash config.
@@ -20,7 +20,7 @@ class LogStash::Filters::Gn < LogStash::Filters::Base
   #   }
   # }
   #
-  config_name "gn"
+  config_name "greynoise"
 
   # Replace the message with this value.
   config :ip, :validate => :string, :required => true, :default => "61.163.128.58"
@@ -36,13 +36,13 @@ class LogStash::Filters::Gn < LogStash::Filters::Base
   def filter(event)
 
     if @key
-      url = "https://enterprise.api.greynoise.io/v2/noise/context/" + event.get('ip')
+      url = "https://enterprise.api.greynoise.io/v2/noise/context/" + event.sprintf(ip)
       uri = URI.parse(URI.encode(url.strip))
 
-      response = Faraday.get(uri, nil, Key: event.get('apikey'))
+      response = Faraday.get(uri, nil, Key: event.sprintf(key))
     else
       url = "https://api.greynoise.io/v1/query/ip"
-      response = Faraday.post url, { :ip => event.get('ip') }
+      response = Faraday.post url, { :ip => event.sprintf(ip) }
 
     end
 
@@ -53,4 +53,4 @@ class LogStash::Filters::Gn < LogStash::Filters::Base
     filter_matched(event)
 
   end # def filter
-end # class LogStash::Filters::Gn
+end # class LogStash::Filters::Greynoise

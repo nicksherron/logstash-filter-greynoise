@@ -1,12 +1,12 @@
 # encoding: utf-8
 require_relative '../spec_helper'
-require "logstash/filters/gn"
+require "logstash/filters/greynoise"
 
-describe LogStash::Filters::Gn do
+describe LogStash::Filters::Greynoise do
   describe "Set to Hello World" do
     let(:config) do <<-CONFIG
       filter {
-        gn {
+        greynoise {
           message => "Hello World"
         }
       }
