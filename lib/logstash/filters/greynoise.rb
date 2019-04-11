@@ -23,8 +23,8 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   config_name "greynoise"
 
   # Replace the message with this value.
-  config :ip, :validate => :string, :required => true, :default => "61.163.128.58"
   config :key, :validate => :string, :required => false
+  config :ip, :validate => :string, :required => true, :default => "61.163.128.58"
 
 
 
