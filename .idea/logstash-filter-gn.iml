@@ -16,7 +16,7 @@
     <orderEntry type="library" scope="PROVIDED" name="elasticsearch (v5.0.5, rbenv: jruby-9.1.17.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="elasticsearch-api (v5.0.5, rbenv: jruby-9.1.17.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="elasticsearch-transport (v5.0.5, rbenv: jruby-9.1.17.0) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="faraday (v0.15.4, rbenv: jruby-9.1.17.0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday (v0.9.2, rbenv: jruby-9.1.17.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ffi (v1.10.0, rbenv: jruby-9.1.17.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="filesize (v0.0.4, rbenv: jruby-9.1.17.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="fivemat (v1.3.7, rbenv: jruby-9.1.17.0) [gem]" level="application" />

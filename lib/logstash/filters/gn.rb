@@ -24,7 +24,6 @@ class LogStash::Filters::Gn < LogStash::Filters::Base
 
   # Replace the message with this value.
   config :ip, :validate => :string, :required => true, :default => "61.163.128.58"
-  config :message, :validate => :string, :default => "Hello World!"
   config :key, :validate => :string, :required => false
 
 
