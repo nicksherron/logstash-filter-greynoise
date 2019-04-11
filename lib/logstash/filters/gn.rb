@@ -44,7 +44,6 @@ class LogStash::Filters::Gn < LogStash::Filters::Base
       url = "https://api.greynoise.io/v1/query/ip"
       response = Faraday.post url, { :ip => event.get('ip') }
 
-      event.set("message", @message)
     end
 
     result = JSON.parse(response.body)
