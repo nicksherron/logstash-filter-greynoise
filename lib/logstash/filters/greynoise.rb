@@ -14,12 +14,12 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   # Setting the config_name here is required. This is how you
   # configure this filter from your Logstash config.
   #
-  # filter {
-  #    {
-  #     message => "My message..."
-  #   }
-  # }
-  #
+   #  filter {
+   #   greynoise {
+   #     ip => "ip"
+   #   }
+   #  }
+
   config_name "greynoise"
 
   # Replace the message with this value.
