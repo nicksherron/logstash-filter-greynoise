@@ -24,7 +24,7 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
 
   # Replace the message with this value.
   config :key, :validate => :string, :required => false
-  config :ip, :validate => :string, :required => true, :default => "61.163.128.58"
+  config :ip, :validate => :string, :required => true
 
 
 
