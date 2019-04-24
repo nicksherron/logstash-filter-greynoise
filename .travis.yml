@@ -1,0 +1,22 @@
+---
+sudo: false
+language: ruby
+cache: bundler
+rvm:
+  - jruby-1.7.25
+script: bundle exec rspec spec && bundle exec rspec spec --tag integration
+jdk: oraclejdk8
+matrix:
+  include:
+    - rvm: jruby-9.1.13.0
+      env: LOGSTASH_BRANCH=master
+    - rvm: jruby-9.1.13.0
+      env: LOGSTASH_BRANCH=7.0
+    - rvm: jruby-9.1.13.0
+      env: LOGSTASH_BRANCH=6.7
+    - rvm: jruby-9.1.13.0
+      env: LOGSTASH_BRANCH=6.6
+    - rvm: jruby-1.7.27
+      env: LOGSTASH_BRANCH=5.6
+  fast_finish: true
+before_install: gem install bundler -v '< 2'
