@@ -23,8 +23,10 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   config_name "greynoise"
 
   # Replace the message with this value.
-  config :key, :validate => :string, :required => false
+
   config :ip, :validate => :string, :required => true
+  config :key, :validate => :string, :required => false
+  config :target, :validate => :string, :default => "greynoise"
 
 
 
@@ -48,7 +50,7 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
 
     result = JSON.parse(response.body)
 
-    event.set('greynoise', result)
+    event.set(@target, result)
     # filter_matched should go in the last line of our successful code
     filter_matched(event)
 
