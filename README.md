@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Logstash REST Filter 
+=======
+# Logstash REST Filter
+>>>>>>> 076580bd35daff857fc6d611a0354b9bb7bf947d
 This is a filter plugin for [Logstash](https://github.com/elastic/logstash).
 
 It is fully free and fully open source. The license is Apache 2.0, meaning you are pretty much free to use it however you want in whatever way.
