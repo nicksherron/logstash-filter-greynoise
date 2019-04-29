@@ -11,4 +11,5 @@ vendor
 *.iml
 
 gradle.properties
-.envutils/
+.env
+utils/
