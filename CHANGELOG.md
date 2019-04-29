@@ -2,3 +2,5 @@
   - Plugin created with the logstash plugin generator
 ## 0.1.1 
   - Added target field for output
+## 0.1.2 
+  - Added user-agent  

@@ -41,10 +41,10 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
       url = "https://enterprise.api.greynoise.io/v2/noise/context/" + event.sprintf(ip)
       uri = URI.parse(URI.encode(url.strip))
 
-      response = Faraday.get(uri, nil, Key: event.sprintf(key))
+      response = Faraday.get(uri, nil, 'User-Agent' => 'logstash-filter-greynoise', Key: event.sprintf(key))
     else
       url = "https://api.greynoise.io/v1/query/ip"
-      response = Faraday.post url, { :ip => event.sprintf(ip) }
+      response = Faraday.post url, { :ip => event.sprintf(ip) }, 'User-Agent' => 'logstash-filter-greynoise'
 
     end
 
@@ -56,3 +56,4 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
 
   end # def filter
 end # class LogStash::Filters::Greynoise
+
