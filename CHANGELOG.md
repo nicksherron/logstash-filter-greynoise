@@ -4,3 +4,5 @@
   - Added target field for output
 ## 0.1.2 
   - Added user-agent  
+## 0.1.3 
+  - Removed unused dependencies  
