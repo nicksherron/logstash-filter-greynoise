@@ -37,11 +37,13 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   public
   def filter(event)
 
+    # check if api key exists and has len of 25 or more to prevent forbidden response
     if @key.length >= 25
       url = "https://enterprise.api.greynoise.io/v2/noise/context/" + event.sprintf(ip)
       uri = URI.parse(URI.encode(url.strip))
 
       response = Faraday.get(uri, nil, 'User-Agent' => 'logstash-filter-greynoise', Key: event.sprintf(key))
+    # if no key then use alpha(free) api
     else
       url = "https://api.greynoise.io/v1/query/ip"
       response = Faraday.post url, { :ip => event.sprintf(ip) }, 'User-Agent' => 'logstash-filter-greynoise'
