@@ -25,7 +25,7 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   # Replace the message with this value.
 
   config :ip, :validate => :string, :required => true
-  config :key, :validate => :string, :default => nil
+  config :key, :validate => :string, :required => false
   config :target, :validate => :string, :default => "greynoise"
 
 
@@ -37,14 +37,14 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   public
   def filter(event)
 
-    if not @key.nil?
+    if @key
       url = "https://enterprise.api.greynoise.io/v2/noise/context/" + event.sprintf(ip)
       uri = URI.parse(URI.encode(url.strip))
 
-      response = Faraday.get(uri, nil, Key: event.sprintf(key))
+      response = Faraday.get(uri, nil, 'User-Agent' => 'logstash-filter-greynoise', Key: event.sprintf(key))
     else
       url = "https://api.greynoise.io/v1/query/ip"
-      response = Faraday.post url, { :ip => event.sprintf(ip) }
+      response = Faraday.post url, { :ip => event.sprintf(ip) }, 'User-Agent' => 'logstash-filter-greynoise'
 
     end
 
