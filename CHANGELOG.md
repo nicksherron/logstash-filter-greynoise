@@ -6,3 +6,5 @@
   - Added user-agent  
 ## 0.1.3 
   - Removed unused dependencies  
+## 0.1.4
+  - Updated key check for len

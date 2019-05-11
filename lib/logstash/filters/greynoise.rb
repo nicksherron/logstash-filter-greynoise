@@ -37,7 +37,7 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   public
   def filter(event)
 
-    if @key
+    if @key.length >= 25
       url = "https://enterprise.api.greynoise.io/v2/noise/context/" + event.sprintf(ip)
       uri = URI.parse(URI.encode(url.strip))
 
