@@ -13,3 +13,4 @@ vendor
 gradle.properties
 .env
 utils/
+.envrc
