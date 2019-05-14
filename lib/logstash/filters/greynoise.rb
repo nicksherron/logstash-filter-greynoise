@@ -25,7 +25,7 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   # Replace the message with this value.
 
   config :ip, :validate => :string, :required => true
-  config :key, :validate => :string, :required => false
+  config :key, :validate => :string, :default => ""
   config :target, :validate => :string, :default => "greynoise"
 
 

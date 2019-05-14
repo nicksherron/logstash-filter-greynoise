@@ -8,3 +8,6 @@
   - Removed unused dependencies  
 ## 0.1.4
   - Updated key check for len
+## 0.1.5
+  - Fixed nil key error
+ 
