@@ -1,8 +1,10 @@
 # encoding: utf-8
-require "logstash/filters/base"
+require 'logstash/filters/base'
 require "json"
 require "logstash/namespace"
-require 'faraday'
+require "faraday"
+require "ipaddr"
+require "lru_redux"
 
 
 # This  filter will replace the contents of the default
@@ -14,48 +16,113 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
   # Setting the config_name here is required. This is how you
   # configure this filter from your Logstash config.
   #
-   #  filter {
-   #   greynoise {
-   #     ip => "ip"
-   #   }
-   #  }
+  #  filter {
+  #   greynoise {
+  #     ip => "ip"
+  #   }
+  #  }
 
   config_name "greynoise"
 
-  # Replace the message with this value.
-
+  # ip address to use for greynoise query
   config :ip, :validate => :string, :required => true
+
+  # greynoise enterprise api key
   config :key, :validate => :string, :default => ""
+
+  # target top level key of hash response
   config :target, :validate => :string, :default => "greynoise"
 
+  # tag if ip address supplied is invalid
+  config :tag_on_failure, :validate => :string, :default => '_greynoise_filter_invalid_ip'
 
+  # set the size of cache for successful requests
+  config :hit_cache_size, :validate => :number, :default => 0
+
+  # how long to cache successful requests (in seconds)
+  config :hit_cache_ttl, :validate => :number, :default => 60
 
   public
+
   def register
-  end # def register
-
-  public
-  def filter(event)
-
-    # check if api key exists and has len of 25 or more to prevent forbidden response
-    if @key.length >= 25
-      url = "https://enterprise.api.greynoise.io/v2/noise/context/" + event.sprintf(ip)
-      uri = URI.parse(URI.encode(url.strip))
-
-      response = Faraday.get(uri, nil, 'User-Agent' => 'logstash-filter-greynoise', Key: event.sprintf(key))
-    # if no key then use alpha(free) api
-    else
-      url = "https://api.greynoise.io/v1/query/ip"
-      response = Faraday.post url, { :ip => event.sprintf(ip) }, 'User-Agent' => 'logstash-filter-greynoise'
-
+    if @hit_cache_size > 0
+      @hit_cache = LruRedux::TTL::ThreadSafeCache.new(@hit_cache_size, @hit_cache_ttl)
     end
 
-    result = JSON.parse(response.body)
+  end # def register
 
-    event.set(@target, result)
-    # filter_matched should go in the last line of our successful code
-    filter_matched(event)
+  private
 
+  def get_free(target_ip)
+    url = "https://api.greynoise.io/v1/query/ip"
+    response = Faraday.post url, {:ip => target_ip}, 'User-Agent' => 'logstash-filter-greynoise'
+    if response.success?
+      JSON.parse(response.body)
+    else
+      nil
+    end
+  end
+
+  private
+
+  def get_enterprise(target_ip, api_key)
+    url = "https://enterprise.api.greynoise.io/v2/noise/context/" + target_ip
+    uri = URI.parse(URI.encode(url.strip))
+    response = Faraday.get(uri, nil, 'User-Agent' => 'logstash-filter-greynoise', Key: api_key)
+    if response.success?
+      JSON.parse(response.body)
+    else
+      nil
+    end
+  end
+
+  public
+
+  def filter(event)
+    valid = nil
+    begin
+      IPAddr.new(event.sprintf(ip))
+    rescue ArgumentError => e
+      valid = e
+    end
+
+    if valid
+      @logger.error("Invalid IP address, skipping", :ip => event.sprintf(ip), :event => event.to_hash)
+      event.tag(@tag_on_failure)
+    else
+      if @hit_cache
+        result = @hit_cache[event.sprintf(ip)]
+        if result
+          event.set(@target, result)
+          filter_matched(event)
+        else
+          # check if api key exists and has len of 25 or more to prevent forbidden response
+          if @key.length >= 25
+            result = get_enterprise(event.sprintf(ip), event.sprintf(key))
+            # if no key then use alpha(free) api
+          else
+            result = get_free(event.sprintf(ip))
+          end
+          unless result.nil?
+            @hit_cache[event.sprintf(ip)] = result
+            event.set(@target, result)
+            # filter_matched should go in the last line of our successful code
+            filter_matched(event)
+          end
+        end
+      else
+        if @key.length >= 25
+          result = get_enterprise(event.sprintf(ip), event.sprintf(key))
+        else
+          result = get_free(event.sprintf(ip))
+        end
+
+        unless result.nil?
+          event.set(@target, result)
+          filter_matched(event)
+        end
+      end
+    end
   end # def filter
-end # class LogStash::Filters::Greynoise
+end # def LogStash::Filters::Greynoise
 

@@ -10,4 +10,6 @@
   - Updated key check for len
 ## 0.1.5
   - Fixed nil key error
+## 0.1.6
+  - Added LRU cache options and filter for invalid ips
  

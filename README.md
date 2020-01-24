@@ -19,10 +19,10 @@ $LS_HOME/bin/logstash-plugin install logstash-filter-greynoise
 
 Or you can build it yourself:
 ```
-git clone https://github.com/nsherron90/logstash-filter-greynoise.git
+git clone https://github.com/nicksherron/logstash-filter-greynoise.git
 bundle install
 gem build logstash-filter-greynoise.gemspec
-$LS_HOME/bin/logstash-plugin install logstash-filter-greynoise-0.1.4.gem
+$LS_HOME/bin/logstash-plugin install logstash-filter-greynoise-0.1.6.gem
 ```
 
 ### 2. Filter Configuration
@@ -34,6 +34,8 @@ filter {
     ip => "ip_value"                 # string (required, reference to ip address field)
     key => "your_greynoise_key"      # string (optional, no default)
     target => "greynoise"            # string (optional, default = greynoise)
+    hit_cache_size => 100            # number (optional, default = 0)
+    hit_cache_ttl => 6               # number (optional, default = 60) 
   }
 }
 ```

@@ -61,6 +61,22 @@ If this field is an array, only the first value will be used.
 
 Your Greynoise API key. If you don't have a key, either signup for a free enterprise trial or
 simply leave out this field to perform lookups via the Alpha(free) api. NOTE, the enterpise and alpha api do not return the same data.
+
+[id="plugins-{type}s-{plugin}-hit_cache_size"]
+===== `hit_cache_size`
+
+  * Value type is <<number,number>>
+  * Default value is `0`
+
+Number of items to store in LRU cache.
+
+id="plugins-{type}s-{plugin}-hit_cache_ttl"]
+===== `hit_cache_ttl`
+
+  * Value type is <<number,number>>
+  * Default value is `60`
+
+Time in seconds for LRU cache item eviction.
 //
 //[id="plugins-{type}s-{plugin}-setting_name_3"]
 //===== `setting_name_3`
