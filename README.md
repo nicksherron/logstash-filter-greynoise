@@ -22,7 +22,7 @@ Or you can build it yourself:
 git clone https://github.com/nicksherron/logstash-filter-greynoise.git
 bundle install
 gem build logstash-filter-greynoise.gemspec
-$LS_HOME/bin/logstash-plugin install logstash-filter-greynoise-0.1.6.gem
+$LS_HOME/bin/logstash-plugin install logstash-filter-greynoise-0.1.7.gem
 ```
 
 ### 2. Filter Configuration

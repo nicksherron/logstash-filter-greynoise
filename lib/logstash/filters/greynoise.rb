@@ -2,9 +2,10 @@
 require 'logstash/filters/base'
 require "json"
 require "logstash/namespace"
-require "faraday"
 require "ipaddr"
 require "lru_redux"
+require 'net/http'
+require 'uri'
 
 
 # This  filter will replace the contents of the default
@@ -49,27 +50,48 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
       @hit_cache = LruRedux::TTL::ThreadSafeCache.new(@hit_cache_size, @hit_cache_ttl)
     end
 
-  end # def register
+  end
+
+  # def register
 
   private
 
   def get_free(target_ip)
-    url = "https://api.greynoise.io/v1/query/ip"
-    response = Faraday.post url, {:ip => target_ip}, 'User-Agent' => 'logstash-filter-greynoise'
-    if response.success?
+
+    uri = URI.parse("https://api.greynoise.io/v1/query/ip")
+    request = Net::HTTP::Post.new(uri)
+    request["User-Agent"] = "logstash-filter-greynoise 0.1.7"
+    request.set_form_data(
+        "ip" => target_ip,
+    )
+    req_options = {
+        use_ssl: uri.scheme == "https",
+    }
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) { |http|
+      http.request(request)
+    }
+    if response.is_a?(Net::HTTPSuccess)
       JSON.parse(response.body)
     else
       nil
     end
   end
 
+
   private
 
   def get_enterprise(target_ip, api_key)
-    url = "https://enterprise.api.greynoise.io/v2/noise/context/" + target_ip
-    uri = URI.parse(URI.encode(url.strip))
-    response = Faraday.get(uri, nil, 'User-Agent' => 'logstash-filter-greynoise', Key: api_key)
-    if response.success?
+    uri = URI.parse("https://enterprise.api.greynoise.io/v2/noise/context/" + target_ip)
+    request = Net::HTTP::Get.new(uri)
+    request["Key"] = api_key
+    request["User-Agent"] = "logstash-filter-greynoise 0.1.7"
+    req_options = {
+        use_ssl: uri.scheme == "https",
+    }
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) { |http|
+      http.request(request)
+    }
+    if response.is_a?(Net::HTTPSuccess)
       JSON.parse(response.body)
     else
       nil
@@ -123,6 +145,8 @@ class LogStash::Filters::Greynoise < LogStash::Filters::Base
         end
       end
     end
-  end # def filter
+  end
+
+  # def filter
 end # def LogStash::Filters::Greynoise
 
